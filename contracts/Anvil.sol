@@ -4,16 +4,24 @@
 // It will be used by the Solidity compiler to validate its version.
 pragma solidity ^0.8.0;
 
-// We import this library to be able to use console.log
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 
 
 
+
 // This is the main building block for smart contracts.
 contract Anvil is ERC1155, VRFConsumerBaseV2 {
+
+    struct UpgradeRequest {
+        //the player requesting the upgrade
+        address player;
+        //the ID of the item requested to be upgraded
+        uint256 itemId;
+    }
+
+    mapping(uint256 => UpgradeRequest) upgradeRequests;
 
     /**********
     ** 
@@ -47,6 +55,7 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
     //the amount of items of type {id} needed to attempt an upgrade to {id+1}.
     uint256 public constant UPGRADE_FACTOR = 10;
 
+
     address public owner;
 
 
@@ -56,27 +65,23 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
     ** 
     **********/
     VRFCoordinatorV2Interface COORDINATOR;
-
-    bytes32 public keyHash;
-    uint256 public fee;
-    uint256 public _randomNumber;
-    uint256 public _requestId;
-    uint64 _subscriptionId;
+    uint64 s_subscriptionId;
+    address vrfCoordinator = 0x6168499c0cFfCaCD319c818142124B7A15E857ab;
+    bytes32 keyHash = 0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
     uint32 callbackGasLimit = 100000;
-    uint16 requestConfirmations = 1;
-    address vrfCoordinator = 0x6168499c0cFfCaCD319c818142124B7A15E857ab; // Rinkeby
-    address linkTokenAddress = 0x01BE23585060835E02B77ef475b0Cc51aA1e0709;  // Rinkeby - not needed in V2?
+    uint16 requestConfirmations = 3;
+    uint32 numWords =  1;
+    uint256 public _randomNumber;
+    address s_owner;
 
-    constructor()   ERC1155("https://game.example/api/item/{id}.json")
+    constructor(uint64 subscriptionId)   ERC1155("https://game.example/api/item/{id}.json")
                     VRFConsumerBaseV2(vrfCoordinator){
 
-        /** CHAINLINK INIT **/
-        //not sure why not declare static above, tutorial does it like this
-        keyHash = 0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
         COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
-        _subscriptionId = 4720;
-        fee = 0.1*10**18; // fee of 0.1 LINK
+        s_owner = msg.sender;
+        s_subscriptionId = subscriptionId;
 
+        //old
         owner = msg.sender;
 
         /** ERC1155 INIT **/
@@ -97,58 +102,55 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
      * - `from` must have at least `amount` tokens of token type `id`.
      * TODO implement approval
      */
-    function deterministicUpgradeItem(address from,uint256 id) external {
+    function deterministicUpgradeItem(address from,uint256 itemId) external returns (uint256 requestId)  {
         require(
            from == _msgSender() || isApprovedForAll(from, _msgSender()),
            "Anvil: caller is not owner nor approved"
         );
-        //0 common - 1 uncommon - 2 rare - 3 legendary. Mod 10 to get rank
-        require(id % 10 < 3 , "Anvil: Cannot upgrade legendary item");
-
-        // We can print messages and values using console.log
-        console.log(
-            "Requesting VRF percentage for upgrading from %s items of rarity %s to 1 item of type %s",
-            UPGRADE_FACTOR,
-            id,
-            id+1
-        );
+        //TODO check there's actually 10 items of the one requested to being upgraded
+        //require(balanceOf(from,itemId) >= 10, "Anvil: caller does not have enough tokens");
         
-        uint256 newId = id+1;
-        // Transfer the amount.
-        _burn(msg.sender, id, UPGRADE_FACTOR);
-        _mint(msg.sender, newId, 1, "");
-    }
+        //Ensure Item is upgradable
+        //0 common - 1 uncommon - 2 rare - 3 legendary. Mod 10 to get rank
+        require(itemId % 10 < 3 , "Anvil: Cannot upgrade legendary item");
+        
 
-    //TODO check multiple - https://docs.chain.link/docs/chainlink-vrf-best-practices/#processing-simultaneous-vrf-requests
-    // Assumes the subscription is funded sufficiently.
-    function requestRandomWords() external onlyOwner {
-        // Will revert if subscription is not set and funded.
-
-        //TODO map requestId to the user + the upgrade he wants to do.
-        _requestId = COORDINATOR.requestRandomWords(
-        keyHash,
-        _subscriptionId,
-        requestConfirmations,
-        callbackGasLimit,
-        1 //numWords
+        //trigger Chainlink to get a random percentage for this request
+        requestId = COORDINATOR.requestRandomWords(
+            keyHash,
+            s_subscriptionId,
+            requestConfirmations,
+            callbackGasLimit,
+            numWords
         );
+        //push the request on the stack
+        upgradeRequests[requestId] = UpgradeRequest(
+            msg.sender,
+            itemId
+            );
+    
     }
+
 
     //todo ensure requestId is mapped to user + upgrading request. atm only 1 for testing.
     function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
-        //number ends up between 1-100, used as percentage
+
+        UpgradeRequest storage u = upgradeRequests[requestId];
+
+
+        //burn `UPGRADE_FACTOR` amount, no matter what
+        _burn(u.player, u.itemId, UPGRADE_FACTOR);
+
+        
+        //number ends up between 1-100, use as percentage. 80% change means number between 1-80.
         _randomNumber = (randomWords[0] % 100) + 1;
-        console.log("random number is %s for requestId %s",_randomNumber, requestId);
         if (_randomNumber <= UPGRADE_PERCENTAGE){
-            console.log("Yakshemash. upgraded your item!");
-        }
-        else{
-            console.log("sad story. Burnt your item.. Better luck next time");
+            _mint(u.player, u.itemId+1, 1, "");
         }
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner);
-        _;
-    }
+    require(msg.sender == s_owner);
+    _;
+  }
 }
