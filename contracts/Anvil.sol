@@ -17,10 +17,11 @@ contract Anvil is ERC1155 {
     uint256 public constant RARE = 2;
     uint256 public constant LEGENDARY = 3;
 
+    //everyone starts with Common. No pre-mine of high-quality items
     uint256 public constant startingCommonCount = 10**27;
-    uint256 public constant startingUncommonCount = 10**18;
-    uint256 public constant startingRareCount = 10**9;
-    uint256 public constant startingLegendaryCount = 1;
+    //uint256 public constant startingUncommonCount = 10**18;
+    //uint256 public constant startingRareCount = 10**9;
+    //uint256 public constant startingLegendaryCount = 1;
 
     uint256 public constant UPGRADE_FACTOR = 10;
 
@@ -36,15 +37,17 @@ contract Anvil is ERC1155 {
     constructor() ERC1155("https://game.example/api/item/{id}.json") {
         owner = msg.sender;
         _mint(msg.sender, COMMON, startingCommonCount, "");
-        _mint(msg.sender, UNCOMMON, startingUncommonCount, "");
-        _mint(msg.sender, RARE, startingRareCount, "");
-        _mint(msg.sender, LEGENDARY, startingLegendaryCount, "");
+        // _mint(msg.sender, UNCOMMON, startingUncommonCount, "");
+        // _mint(msg.sender, RARE, startingRareCount, "");
+        // _mint(msg.sender, LEGENDARY, startingLegendaryCount, "");
     }
 
-    function deterministicUpgradeItem(address from, uint256 id) external {
+    function deterministicUpgradeItem(uint256 id) external {
+        require(id < LEGENDARY, "Anvil: Cannot upgrade legendary item");
+
         // We can print messages and values using console.log
         console.log(
-            "Upgrading from %s items of rarity %s to 1 item of type %s",
+            "Requesting VRF percentage for upgrading from %s items of rarity %s to 1 item of type %s",
             UPGRADE_FACTOR,
             id,
             id+1
@@ -52,8 +55,8 @@ contract Anvil is ERC1155 {
         
         uint256 newId = id+1;
         // Transfer the amount.
-        _burn(from, id, 10);
-        _mint(from, newId, 1, "");
+        _burn(msg.sender, id, 10);
+        _mint(msg.sender, newId, 1, "");
     }
 
 }
