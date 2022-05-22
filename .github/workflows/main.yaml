@@ -5,6 +5,9 @@ name: main workflow
 
 env:
   NODE_OPTIONS: --max_old_space_size=4096
+  FUND_AMOUNT: ${{ secrets.FUND_AMOUNT }}
+  PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+  WEB3_INFURA_PROJECT_ID: ${{ secrets.WEB3_INFURA_PROJECT_ID }}
 
 jobs:
   tests:
