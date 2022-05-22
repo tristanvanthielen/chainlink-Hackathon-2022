@@ -9,7 +9,7 @@ env:
 jobs:
   tests:
     runs-on: ubuntu-latest
-
+    environment: rinkeby
     steps:
       - uses: actions/checkout@v2
 
@@ -35,5 +35,11 @@ jobs:
       - name: Install Requirements
         run: pip install -r requirements.txt
 
-      - name: Run Tests
+      - name: Run Tests Local
         run: brownie test
+
+      - name: Run Tests Testnet
+        run: brownie test --network rinkeby
+
+      - name: Deploy To Testnet
+        run: brownie run scripts/vrf_scripts/01_deploy_vrf_consumer.py --network rinkeby

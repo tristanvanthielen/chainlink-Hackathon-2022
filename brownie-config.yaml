@@ -45,7 +45,7 @@ networks:
   rinkeby:
     eth_usd_price_feed: '0x8A753747A1Fa494EC906cE90E9f37563A8AF630e'
     fee: 100000000000000000
-    fund_amount: 0 #5000000000000000000
+    fund_amount: ${FUND_AMOUNT} #5000000000000000000 TODO: does not need to be funded every time?
     gas_lane: '0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc'
     gas_limit: auto
     jobId: 6b88e0402e5d415eb946e528b8e0c7ba
