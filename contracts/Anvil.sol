@@ -80,9 +80,6 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
 
     event ReturnedRandomness(uint256 randomNumber);
 
-    // Temp
-    uint256 public s_requestId;
-
 
     constructor(
         uint64 subscriptionId,
@@ -147,17 +144,6 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
             );
 
     }
-
-    function requestRandomWords() external onlyOwner {
-    // Will revert if subscription is not set and funded.
-    s_requestId = COORDINATOR.requestRandomWords(
-      s_keyHash,
-      s_subscriptionId,
-      s_requestConfirmations,
-      s_callbackGasLimit,
-      s_numWords
-    );
-  }
 
     //todo ensure requestId is mapped to user + upgrading request. atm only 1 for testing.
     function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
