@@ -78,6 +78,8 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
     uint16 immutable s_requestConfirmations = 3;
     address s_owner;
 
+    event ReturnedRandomness(uint256 randomNumber);
+
     // Temp
     uint256 public s_requestId;
 
@@ -169,9 +171,11 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
 
         //number ends up between 1-100, use as percentage. 80% change means number between 1-80.
         _randomNumber = (randomWords[0] % 100) + 1;
-        if (_randomNumber <= UPGRADE_PERCENTAGE){
+        if (_randomNumber <= UPGRADE_PERCENTAGE) {
             _mint(u.player, u.itemId+1, 1, "");
         }
+
+        emit ReturnedRandomness(_randomNumber);
     }
 
     modifier onlyOwner() {
