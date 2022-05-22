@@ -3,8 +3,6 @@ from brownie import (
     accounts,
     config,
     LinkToken,
-    MockV3Aggregator,
-    MockOracle,
     VRFCoordinatorV2Mock,
     Contract,
     web3,
@@ -25,9 +23,7 @@ BLOCK_CONFIRMATIONS_FOR_VERIFICATION = (
 
 contract_to_mock = {
     "link_token": LinkToken,
-    "eth_usd_price_feed": MockV3Aggregator,
     "vrf_coordinator": VRFCoordinatorV2Mock,
-    "oracle": MockOracle,
 }
 
 DECIMALS = 18
@@ -105,16 +101,12 @@ def deploy_mocks(decimals=DECIMALS, initial_value=INITIAL_VALUE):
     account = get_account()
     print("Deploying Mock Link Token...")
     link_token = LinkToken.deploy({"from": account})
-    print("Deploying Mock Price Feed...")
-    mock_price_feed = MockV3Aggregator.deploy(decimals, initial_value, {"from": account})
-    print(f"Deployed to {mock_price_feed.address}")
+    print(f"Deployed to {link_token.address}")
+
     print("Deploying Mock VRFCoordinator...")
     mock_vrf_coordinator = VRFCoordinatorV2Mock.deploy(BASE_FEE, GAS_PRICE_LINK, {"from": account})
     print(f"Deployed to {mock_vrf_coordinator.address}")
 
-    print("Deploying Mock Oracle...")
-    mock_oracle = MockOracle.deploy(link_token.address, {"from": account})
-    print(f"Deployed to {mock_oracle.address}")
     print("Mocks Deployed!")
 
 
