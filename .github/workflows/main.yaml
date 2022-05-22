@@ -42,7 +42,7 @@ jobs:
         run: brownie test
 
       - name: Run Tests Testnet
-        run: brownie test --network rinkeby
+        run: brownie test -s --network rinkeby
 
       - name: Deploy To Testnet
         run: brownie run scripts/vrf_scripts/01_deploy_vrf_consumer.py --network rinkeby
