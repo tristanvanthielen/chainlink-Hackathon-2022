@@ -7,6 +7,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
 
 
 
@@ -24,9 +25,9 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
     mapping(uint256 => UpgradeRequest) upgradeRequests;
 
     /**********
-    ** 
+    **
     ** Anvil values
-    ** 
+    **
     **********/
     uint256 public constant CROSSBOW_COMMON = 0;
     uint256 public constant CROSSBOW_UNCOMMON = 1;
@@ -60,24 +61,40 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
 
 
     /**********
-    ** 
+    **
     ** Chainlink values
-    ** 
+    **
     **********/
-    VRFCoordinatorV2Interface COORDINATOR;
+    VRFCoordinatorV2Interface immutable COORDINATOR;
+    LinkTokenInterface immutable LINKTOKEN;
     uint64 s_subscriptionId;
     address vrfCoordinator = 0x6168499c0cFfCaCD319c818142124B7A15E857ab;
-    bytes32 keyHash = 0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc;
-    uint32 callbackGasLimit = 100000;
-    uint16 requestConfirmations = 3;
-    uint32 numWords =  1;
+    // The gas lane to use, which specifies the maximum gas price to bump to.
+    // For a list of available gas lanes on each network,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    bytes32 immutable s_keyHash;
+    uint32 immutable s_callbackGasLimit = 100000;    uint16 requestConfirmations = 3;
+    uint32 immutable s_numWords = 2;
     uint256 public _randomNumber;
+    uint16 immutable s_requestConfirmations = 3;
     address s_owner;
 
-    constructor(uint64 subscriptionId)   ERC1155("https://game.example/api/item/{id}.json")
-                    VRFConsumerBaseV2(vrfCoordinator){
+    // Temp
+    uint256 public s_requestId;
+    uint256[] public s_randomWords;
+
+
+    constructor(
+        uint64 subscriptionId,
+        address vrfCoordinator,
+        address link,
+        bytes32 keyHash
+    ) ERC1155("https://game.example/api/item/{id}.json")
+        VRFConsumerBaseV2(vrfCoordinator){
 
         COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
+        LINKTOKEN = LinkTokenInterface(link);
+        s_keyHash = keyHash;
         s_owner = msg.sender;
         s_subscriptionId = subscriptionId;
 
@@ -102,33 +119,48 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
      * - `from` must have at least `amount` tokens of token type `id`.
      * TODO implement approval
      */
-    function deterministicUpgradeItem(address from,uint256 itemId) external returns (uint256 requestId)  {
+    function nonDeterministicUpgradeItem(address from,uint256 itemId) external returns (uint256 requestId)  {
         require(
            from == _msgSender() || isApprovedForAll(from, _msgSender()),
            "Anvil: caller is not owner nor approved"
         );
         //TODO check there's actually 10 items of the one requested to being upgraded
         //require(balanceOf(from,itemId) >= 10, "Anvil: caller does not have enough tokens");
-        
+
         //Ensure Item is upgradable
         //0 common - 1 uncommon - 2 rare - 3 legendary. Mod 10 to get rank
         require(itemId % 10 < 3 , "Anvil: Cannot upgrade legendary item");
-        
+
 
         //trigger Chainlink to get a random percentage for this request
         requestId = COORDINATOR.requestRandomWords(
-            keyHash,
+            s_keyHash,
             s_subscriptionId,
-            requestConfirmations,
-            callbackGasLimit,
-            numWords
+            s_requestConfirmations,
+            s_callbackGasLimit,
+            s_numWords
         );
         //push the request on the stack
         upgradeRequests[requestId] = UpgradeRequest(
             msg.sender,
             itemId
             );
-    
+
+    }
+
+    /**
+    * @notice Requests randomness
+    * Assumes the subscription is funded sufficiently; "Words" refers to unit of data in Computer Science
+    */
+    function requestRandomWords() external onlyOwner {
+        // Will revert if subscription is not set and funded.
+        s_requestId = COORDINATOR.requestRandomWords(
+        s_keyHash,
+        s_subscriptionId,
+        s_requestConfirmations,
+        s_callbackGasLimit,
+        s_numWords
+        );
     }
 
 
@@ -141,7 +173,7 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
         //burn `UPGRADE_FACTOR` amount, no matter what
         _burn(u.player, u.itemId, UPGRADE_FACTOR);
 
-        
+
         //number ends up between 1-100, use as percentage. 80% change means number between 1-80.
         _randomNumber = (randomWords[0] % 100) + 1;
         if (_randomNumber <= UPGRADE_PERCENTAGE){
