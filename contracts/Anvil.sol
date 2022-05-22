@@ -68,7 +68,6 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
     VRFCoordinatorV2Interface immutable COORDINATOR;
     LinkTokenInterface immutable LINKTOKEN;
     uint64 s_subscriptionId;
-    address vrfCoordinator = 0x6168499c0cFfCaCD319c818142124B7A15E857ab;
     // The gas lane to use, which specifies the maximum gas price to bump to.
     // For a list of available gas lanes on each network,
     // see https://docs.chain.link/docs/vrf-contracts/#configurations
@@ -81,7 +80,6 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
 
     // Temp
     uint256 public s_requestId;
-    uint256[] public s_randomWords;
 
 
     constructor(
@@ -148,21 +146,16 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
 
     }
 
-    /**
-    * @notice Requests randomness
-    * Assumes the subscription is funded sufficiently; "Words" refers to unit of data in Computer Science
-    */
     function requestRandomWords() external onlyOwner {
-        // Will revert if subscription is not set and funded.
-        s_requestId = COORDINATOR.requestRandomWords(
-        s_keyHash,
-        s_subscriptionId,
-        s_requestConfirmations,
-        s_callbackGasLimit,
-        s_numWords
-        );
-    }
-
+    // Will revert if subscription is not set and funded.
+    s_requestId = COORDINATOR.requestRandomWords(
+      s_keyHash,
+      s_subscriptionId,
+      s_requestConfirmations,
+      s_callbackGasLimit,
+      s_numWords
+    );
+  }
 
     //todo ensure requestId is mapped to user + upgrading request. atm only 1 for testing.
     function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
