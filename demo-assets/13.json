@@ -1,9 +1,10 @@
 {
-	"name": "Legendary Sword",
+	"name": "SWORD_LEGENDARY",
 	"description": "The ultimate sword",
 	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/13.jpg",
 	"properties": {
 		"defence": "50",
-		"attack": "45"
+		"attack": "45",
+		"rarity": "LEGENDARY"
 	}
 }
