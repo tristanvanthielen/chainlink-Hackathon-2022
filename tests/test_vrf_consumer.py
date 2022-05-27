@@ -143,7 +143,6 @@ def test_upgrade_items_testnet():
 
     tx = anvil.nonDeterministicUpgradeItem(account, 0, {"from": account})
     tx.wait(1)
-    request_id = tx.events[0]["requestId"]
 
     event_response = listen_for_event(anvil, "ReturnedRandomness")
 
