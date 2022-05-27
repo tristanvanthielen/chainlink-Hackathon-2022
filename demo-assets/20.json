@@ -1,9 +1,10 @@
 {
-	"name": "Common Crossbow",
+	"name": "CROSSBOW_COMMON",
 	"description": "An basic crossbow",
 	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/20.jpg",
 	"properties": {
 		"defence": "10",
-		"attack": "12"
+		"attack": "12",
+		"rarity": "COMMON"
 	}
 }

@@ -1,9 +1,10 @@
 {
-	"name": "Uncommon Crossbow",
+	"name": "CROSSBOW_UNCOMMON",
 	"description": "An upgraded crossbow",
 	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/21.jpg",
 	"properties": {
 		"defence": "15",
-		"attack": "20"
+		"attack": "20",
+		"rarity": "UNCOMMON"
 	}
 }

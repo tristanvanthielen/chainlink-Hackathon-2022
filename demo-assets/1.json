@@ -1,9 +1,10 @@
 {
-	"name": "Uncommon Dagger",
+	"name": "DAGGER_UNCOMMON",
 	"description": "An upgraded dagger",
 	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/1.jpg",
 	"properties": {
 		"defence": "15",
-		"attack": "18"
+		"attack": "18",
+		"rarity": "UNCOMMON"
 	}
 }

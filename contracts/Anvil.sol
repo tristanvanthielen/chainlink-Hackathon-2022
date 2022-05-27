@@ -29,20 +29,22 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
     ** Anvil values
     **
     **********/
-    uint256 public constant CROSSBOW_COMMON = 0;
-    uint256 public constant CROSSBOW_UNCOMMON = 1;
-    uint256 public constant CROSSBOW_RARE = 2;
-    uint256 public constant CROSSBOW_LEGENDARY = 3;
+
+    uint256 public constant DAGGER_COMMON = 0;
+    uint256 public constant DAGGER_UNCOMMON = 1;
+    uint256 public constant DAGGER_RARE = 2;
+    uint256 public constant DAGGER_LEGENDARY = 3;
 
     uint256 public constant SWORD_COMMON = 10;
     uint256 public constant SWORD_UNCOMMON = 11;
     uint256 public constant SWORD_RARE = 12;
     uint256 public constant SWORD_LEGENDARY = 13;
 
-    uint256 public constant DAGGER_COMMON = 20;
-    uint256 public constant DAGGER_UNCOMMON = 21;
-    uint256 public constant DAGGER_RARE = 22;
-    uint256 public constant DAGGER_LEGENDARY = 23;
+    uint256 public constant CROSSBOW_COMMON = 20;
+    uint256 public constant CROSSBOW_UNCOMMON = 21;
+    uint256 public constant CROSSBOW_RARE = 22;
+    uint256 public constant CROSSBOW_LEGENDARY = 23;
+
 
     //everyone starts with Common. No pre-mine of high-quality items
     uint256 public constant startingCommonCount = 10**27;
@@ -86,7 +88,7 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
         address vrfCoordinator,
         address link,
         bytes32 keyHash
-    ) ERC1155("https://bafybeigmz236aixh255hw4jsjgtckgniuhui5qfxd2etnnlbzha4b6aazq.ipfs.nftstorage.link/{id}.json")
+    ) ERC1155("https://bafybeicof3l4zj7jnb6klr5hr6bttf7jlnlhx5ukigw6nfrhvdhq345lou.ipfs.nftstorage.link/{id}.json")
         VRFConsumerBaseV2(vrfCoordinator){
 
         COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);

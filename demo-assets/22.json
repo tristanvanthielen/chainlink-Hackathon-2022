@@ -1,9 +1,10 @@
 {
-	"name": "Rare Crossbow",
+	"name": "CROSSBOW_RARE",
 	"description": "A rare crossbow",
 	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/22.jpg",
 	"properties": {
 		"defence": "20",
-		"attack": "25"
+		"attack": "25",
+		"rarity": "RARE"
 	}
 }
