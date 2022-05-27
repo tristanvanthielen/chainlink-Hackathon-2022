@@ -86,7 +86,7 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
         address vrfCoordinator,
         address link,
         bytes32 keyHash
-    ) ERC1155("https://game.example/api/item/{id}.json")
+    ) ERC1155("https://bafybeigmz236aixh255hw4jsjgtckgniuhui5qfxd2etnnlbzha4b6aazq.ipfs.nftstorage.link/{id}.json")
         VRFConsumerBaseV2(vrfCoordinator){
 
         COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
