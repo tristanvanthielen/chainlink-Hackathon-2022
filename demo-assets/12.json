@@ -1,0 +1,9 @@
+{
+	"name": "Rare Sword",
+	"description": "A rare sword",
+	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/12.jpg",
+	"properties": {
+		"defence": "25",
+		"attack": "25"
+	}
+}

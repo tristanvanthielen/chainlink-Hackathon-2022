@@ -1,0 +1,9 @@
+{
+	"name": "Common Dagger",
+	"description": "An basic dagger",
+	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/0.jpg",
+	"properties": {
+		"defence": "10",
+		"attack": "12"
+	}
+}

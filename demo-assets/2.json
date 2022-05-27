@@ -1,0 +1,9 @@
+{
+	"name": "Rare Dagger",
+	"description": "A rare dagger",
+	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/2.jpg",
+	"properties": {
+		"defence": "25",
+		"attack": "25"
+	}
+}

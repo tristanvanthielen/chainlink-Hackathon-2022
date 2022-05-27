@@ -1,0 +1,9 @@
+{
+	"name": "Legendary Crossbow",
+	"description": "The ultimate crossbow",
+	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/23.jpg",
+	"properties": {
+		"defence": "30",
+		"attack": "30"
+	}
+}

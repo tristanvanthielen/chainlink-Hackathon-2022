@@ -1,0 +1,9 @@
+{
+	"name": "Common Sword",
+	"description": "A basic sword",
+	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/10.jpg",
+	"properties": {
+		"defence": "10",
+		"attack": "10"
+	}
+}

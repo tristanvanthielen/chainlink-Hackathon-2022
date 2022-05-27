@@ -1,0 +1,9 @@
+{
+	"name": "Legendary Dagger",
+	"description": "The ultimate dagger",
+	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/3.jpg",
+	"properties": {
+		"defence": "45",
+		"attack": "30"
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"name": "Uncommon Sword",
+	"description": "An upgraded sword",
+	"image": "https://bafybeiezzbeigwmmgjk4ekbtqjawyzgztuwh2fn22jwgefsqm6f5uzbdly.ipfs.nftstorage.link/11.jpg",
+	"properties": {
+		"defence": "15",
+		"attack": "15"
+	}
+}
