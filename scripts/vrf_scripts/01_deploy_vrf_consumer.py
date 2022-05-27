@@ -7,12 +7,14 @@ from scripts.helpful_scripts import (
     get_contract,
     is_verifiable_contract,
 )
+from scripts.vrf_scripts.create_subscription import fund_subscription
 
 
 def depoly_vrf_consumer():
     account = get_account()
     print(f"On network {network.show_active()}")
     subscription_id = config["networks"][network.show_active()]["subscription_id"]
+    fund_subscription(subscription_id=subscription_id)
     gas_lane = config["networks"][network.show_active()]["gas_lane"]  # Also known as keyhash
     vrf_coordinator = get_contract("vrf_coordinator")
     link_token = get_contract("link_token")
