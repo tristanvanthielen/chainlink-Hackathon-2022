@@ -9,14 +9,19 @@ Upgrading game items always feels like a risk. Is the game server honest or am I
 Use Brownie to test and deploy Anvil local or on Rinkeby testnet.
 
 **Local**:
+
+
 `brownie test`
 
 **Rinkeby**:
+
 Setup .env:
 export PRIVATE_KEY={METAMASK_ACCOUNT_KEY}
 export WEB3_INFURA_PROJECT_ID={INFURA_PROJECT_ID}
 export FUND_AMOUNT=0 or more depending on if you already funded the subscription
+
 Testing:
 `brownie test --network rinkeby`
+
 Deploy:
 `brownie run scripts/vrf_scripts/01_deploy_vrf_consumer.py --network rinkeby`
