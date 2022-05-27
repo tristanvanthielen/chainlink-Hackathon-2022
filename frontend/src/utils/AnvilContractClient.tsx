@@ -5,7 +5,7 @@ import { IInventory } from './InventoryManager';
 const { ethereum } = window;
 
 export class AnvilContractClient {
-    static ANVIL_CONTRACT_ADDRESS: string = "0x8eAD02758Afa6409e8508db8bAF9162588c5D572";
+    static ANVIL_CONTRACT_ADDRESS: string = "0xaC6fFB68c46C1e794f29F0718932D63045e0Aa93";
     static provider: any = null;
     static signer: any = null;
     static contract: any = null;
