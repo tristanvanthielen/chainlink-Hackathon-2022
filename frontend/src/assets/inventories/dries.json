@@ -1,0 +1,36 @@
+{
+    "items": [
+        {
+            "itemId": 1,
+            "itemName": "Steel sword",
+            "itemRarity": {
+                "rarityClass": "COMMON"
+            },
+            "visualAssetPath": "https://preview.free3d.com/img/2019/08/2140192859611989609/pda6eid2-900.jpg"
+        },
+        {
+            "itemId": 2,
+            "itemName": "Steel swordddddddddddddddddddddd",
+            "itemRarity": {
+                "rarityClass": "COMMON"
+            },
+            "visualAssetPath": "https://preview.free3d.com/img/2019/08/2140192859611989609/pda6eid2-900.jpg"
+        },
+        {
+            "itemId": 3,
+            "itemName": "Steel sword",
+            "itemRarity": {
+                "rarityClass": "COMMON"
+            },
+            "visualAssetPath": "https://preview.free3d.com/img/2019/08/2140192859611989609/pda6eid2-900.jpg"
+        },
+        {
+            "itemId": 4,
+            "itemName": "Steel sword",
+            "itemRarity": {
+                "rarityClass": "COMMON"
+            },
+            "visualAssetPath": "https://preview.free3d.com/img/2019/08/2140192859611989609/pda6eid2-900.jpg"
+        }
+    ]
+}
