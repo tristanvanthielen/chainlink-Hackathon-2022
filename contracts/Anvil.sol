@@ -130,6 +130,10 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
         //0 common - 1 uncommon - 2 rare - 3 legendary. Mod 10 to get rank
         require(itemId % 10 < 3 , "Anvil: Cannot upgrade legendary item");
 
+        require(balanceOf(from, itemId) >= UPGRADE_FACTOR, "Anvil: You do not have enough items to perform this transaction");
+
+        //burn `UPGRADE_FACTOR` amount, no matter what
+        _burn(from, itemId, UPGRADE_FACTOR);
 
         //trigger Chainlink to get a random percentage for this request
         requestId = COORDINATOR.requestRandomWords(
@@ -151,11 +155,6 @@ contract Anvil is ERC1155, VRFConsumerBaseV2 {
     function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
 
         UpgradeRequest storage u = upgradeRequests[requestId];
-
-
-        //burn `UPGRADE_FACTOR` amount, no matter what
-        _burn(u.player, u.itemId, UPGRADE_FACTOR);
-
 
         //number ends up between 1-100, use as percentage. 80% change means number between 1-80.
         _randomNumber = (randomWords[0] % 100) + 1;

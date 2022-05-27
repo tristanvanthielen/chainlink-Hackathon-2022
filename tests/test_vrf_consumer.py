@@ -1,5 +1,6 @@
 import time
 import pytest
+import brownie
 from brownie import Anvil, convert, network, config
 from scripts.helpful_scripts import (
     get_account,
@@ -84,7 +85,7 @@ def test_returns_random_upgrade_local():
     # Act
     tx = anvil.nonDeterministicUpgradeItem(user_account, 0, {"from": user_account})
     tx.wait(1)
-    request_id = tx.events[0]["requestId"]
+    request_id = tx.events[1]["requestId"]  # Get it from the request and not burn
     vrf_coordinator.fulfillRandomWords(request_id, anvil.address, {"from": get_account()})
 
     # Assert
@@ -93,6 +94,30 @@ def test_returns_random_upgrade_local():
     print(f"Random Number: {anvil._randomNumber()}")
     print(f"Upgraded Item Count: {upgradedItemCount}")
     assert 0 <= upgradedItemCount <= 1
+
+
+def test_returns_random_upgrade_common_fails_local():
+    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+        pytest.skip("Only for local testing")
+    # Arrange
+    account = get_account()
+    user_account = get_account(index=1)
+    subscription_id = create_subscription()
+    fund_subscription(subscription_id=subscription_id)
+    gas_lane = config["networks"][network.show_active()]["gas_lane"]
+    vrf_coordinator = get_contract("vrf_coordinator")
+    link_token = get_contract("link_token")
+    anvil = Anvil.deploy(
+        subscription_id,
+        vrf_coordinator,
+        link_token,
+        gas_lane,
+        {"from": account},
+    )
+
+    # Act
+    with brownie.reverts():
+        anvil.nonDeterministicUpgradeItem(user_account, 0, {"from": user_account})
 
 
 def test_correct_init_testnet():
